@@ -23,7 +23,7 @@ func _input(event):
 #			var distance = abs(initial_touch.x - event.position.x)
 #			if scroll_horizontal == 0:
 #				container.rect_pivot_offset.x = 0
-#			elif scroll_horizontal == container.rect_size.x - rect_size.x:
+#			elif scroll_horizontal == int(container.rect_size.x - rect_size.x):
 #				container.rect_pivot_offset.x = container.rect_size.x
 #			else:
 #				return
