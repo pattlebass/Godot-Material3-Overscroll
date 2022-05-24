@@ -1,10 +1,3 @@
-# Material 3 Overscroll Stretch for Godot 3
-
-This is a demo showcasing the Material 3 overscroll animation in Godot.
-
-## Code
-
-```
 extends ScrollContainer
 
 
@@ -25,9 +18,9 @@ func _input(event):
 	if event is InputEventScreenDrag:
 		if !initial_touch:
 			initial_touch = event.position
-
+		
 		var distance: Vector2 = (initial_touch - event.position).abs()
-
+		
 		# For horizontal scrolling
 		if get_h_scrollbar().visible:
 			if scroll_horizontal == 0:
@@ -37,7 +30,7 @@ func _input(event):
 			else:
 				return
 			container.rect_scale.x = clamp(easeOutQuad(distance.x*0.00001) + 1, 1, 1.03)
-
+		
 		# For vertical scrolling
 		if get_v_scrollbar().visible:
 			if scroll_vertical == 0:
@@ -60,5 +53,3 @@ func _on_ScrollContainer_scroll_ended():
 	var tween = get_tree().create_tween()
 	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(container, "rect_scale", Vector2.ONE, 0.08)
-
-```
