@@ -5,16 +5,20 @@ export(NodePath) onready var container = get_node(container) as Control
 
 var initial_touch
 
+const MAX_DISTANCE = 300
+const MAX_ADD_SCALE = 0.03
+
 
 func _ready():
 # warning-ignore:return_value_discarded
 	connect("scroll_ended", self, "_on_ScrollContainer_scroll_ended")
 
 
-func _input(event):
+func _input(event) -> void:
 	if event is InputEventScreenTouch:
 		if !event.pressed:
 			initial_touch = null
+	
 	if event is InputEventScreenDrag:
 		if !initial_touch:
 			initial_touch = event.position
@@ -29,7 +33,7 @@ func _input(event):
 				container.rect_pivot_offset.x = container.rect_size.x
 			else:
 				return
-			container.rect_scale.x = clamp(easeOutQuad(distance.x*0.00001) + 1, 1, 1.03)
+			container.rect_scale.x = get_computed_scale(distance.x)
 		
 		# For vertical scrolling
 		if get_v_scrollbar().visible:
@@ -39,7 +43,11 @@ func _input(event):
 				container.rect_pivot_offset.y = container.rect_size.y
 			else:
 				return
-			container.rect_scale.y = clamp(easeOutQuad(distance.y*0.00001) + 1, 1, 1.03)
+			container.rect_scale.y = get_computed_scale(distance.y)
+
+
+func get_computed_scale(x: float) -> float:
+	return 1 + easeOutQuad(min(x / MAX_DISTANCE, 1)) * MAX_ADD_SCALE
 
 
 func easeOutQuad(x: float) -> float:
@@ -49,7 +57,7 @@ func easeOutQuad(x: float) -> float:
 	return 1 - (1 - x) * (1 - x)
 
 
-func _on_ScrollContainer_scroll_ended():
+func _on_ScrollContainer_scroll_ended() -> void:
 	var tween = get_tree().create_tween()
 	tween.set_ease(Tween.EASE_IN_OUT)
 	tween.tween_property(container, "rect_scale", Vector2.ONE, 0.08)
